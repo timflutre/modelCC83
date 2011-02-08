@@ -325,7 +325,7 @@ bool Individual::isViable( void )
 
 void Individual::printChromosomes( void )
 {
-  cout << "chromosomes:" << endl;
+  cout << "chromosomes (" << nbChr/2 << " pairs):" << endl;
   for( int i=0; i<nbChr; ++i )
     vChr[i].printSequence();
 }
@@ -333,4 +333,13 @@ void Individual::printChromosomes( void )
 Chromosome& Individual::getChromosome( int idChr )
 {
   return( vChr[idChr] );
+}
+
+int Individual::getNbTEsForLocus( int locus )
+{
+  int nbTEs = 0;
+  int chrPair = floor( (float) locus / nbSitesPerChr );
+  nbTEs = vChr[ 2*chrPair ][ locus-nbSitesPerChr*chrPair ]
+    + vChr[ 2*chrPair + 1 ][ locus-nbSitesPerChr*chrPair ];
+  return( nbTEs );
 }
