@@ -345,7 +345,14 @@ void Population::saveData( int simu, int gen, string outFile )
   outStream << setprecision(3) << getQuantileNbTEs( gvNbTEsPerInd, 0.50 ) << sep;
   outStream << setprecision(3) << getQuantileNbTEs( gvNbTEsPerInd, 0.75 ) << sep;
   outStream << getMaxNbTEs( gvNbTEsPerInd ) << sep;
+
+  vector<double> vFreqTEsPerLoc = getFreqTEsPerLocus();
+  gsl_vector_view gvFreqTEsPerLoc = gsl_vector_view_array( &vFreqTEsPerLoc[0],
+                                                           vFreqTEsPerLoc.size() );
   outStream << setprecision(3) << getPropEmptyLoci() << sep;
+  outStream << setprecision(3) << getMeanFreqTEsPerLocus( gvFreqTEsPerLoc ) << sep;
+  outStream << setprecision(3) << getVarFreqTEsPerLocus( gvFreqTEsPerLoc ) << sep;
+
   outStream << endl;
   outStream.close();
 }
@@ -356,14 +363,32 @@ void Population::getOccPerLocus( vector< vector<int> > & vOcc )
     vInd[ ind ].getOccPerLocus( vOcc[ ind ] );
 }
 
-void Population::getFreqBetweenLoci( void )
+vector<double> Population::getFreqTEsPerLocus()
 {
-  
+  vector<double> vFreqTEsPerLoc;
+  int nbLociPerInd = getNbLociPerIndividual();
+  for( int loc=0; loc<nbLociPerInd; ++loc ){
+    int nbTEs = 0;
+    for( int ind=0; ind<nbDiploids; ++ind )
+      nbTEs += vInd[ ind ].getNbTEsForLocus( loc );
+    vFreqTEsPerLoc.push_back( (float) nbTEs / ( (nbChrPerInd/2) * nbDiploids ) );
+  }
+  return( vFreqTEsPerLoc );
+}
+
+float Population::getMeanFreqTEsPerLocus( gsl_vector_view gvFreqTEsPerLoc )
+{
+  return( gsl_stats_mean( gvFreqTEsPerLoc.vector.data, 1, getNbLociPerIndividual() ) );
+}
+
+float Population::getVarFreqTEsPerLocus( gsl_vector_view gvFreqTEsPerLoc )
+{
+  return( gsl_stats_variance( gvFreqTEsPerLoc.vector.data, 1, getNbLociPerIndividual() ) );
 }
 
 float Population::getPropEmptyLoci( void )
 {
-  int nbLociPerInd = ( nbChrPerInd * nbSitesPerChr ) / 2;
+  int nbLociPerInd = getNbLociPerIndividual();
   vector< vector<int> > vOcc ( nbDiploids, vector<int>( nbLociPerInd, 0 ) );
   getOccPerLocus( vOcc );
   int nbEmptyLoci = 0;
@@ -372,4 +397,19 @@ float Population::getPropEmptyLoci( void )
       if( vOcc[ ind ][ loc ] == 0 )
         ++ nbEmptyLoci;
   return( (float) nbEmptyLoci / ( nbLociPerInd * nbDiploids ) );
+}
+
+int Population::getNbLociPerIndividual( void )
+{
+  return( ( nbChrPerInd * nbSitesPerChr ) / 2 );
+}
+
+void Population::printChrSequencesPerInd( void )
+{
+  for( int ind=0; ind<nbDiploids; ++ind ){
+    cout << "individual " << ind+1
+         << " (" << nbChrPerInd << " chr, "
+         << getNbLociPerIndividual() << " loci):" << endl;
+    vInd[ ind ].printChromosomes();
+  }
 }
