@@ -1,0 +1,20 @@
+# compilation (on my machine, add -g to debug with gdb)
+make
+
+# check for memory leaks
+valgrind ./a.out -v 1 -s 3 toto
+
+# computation times
+$ ./a.out -s 10 -g 1000 -o data_n10.csv
+START: Wed Feb  2 15:05:10 2011
+END: Wed Feb  2 15:06:06 2011
+$ ./a.out -s 10 -n 50 -g 1000 -o data_n50.csv
+START: Wed Feb  2 16:07:48 2011
+END: Wed Feb  2 16:13:24 2011
+
+# compilation for other Linux machines
+gcc -Wall -lstdc++ -lgsl -lgslcblas -static Simulation.cpp Population.cpp Individual.cpp Chromosome.cpp modelCC83.cpp -o modelCC83_static -lstdc++ -lgsl -lgslcblas -lm
+
+# plot the results in command-line
+R CMD BATCH plot.R
+
