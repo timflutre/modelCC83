@@ -2,6 +2,7 @@
 #include "gsl/gsl_rng.h"
 using namespace std;
 
+#include "Population.h"
 #include "Individual.h"
 #include "Chromosome.h"
 
@@ -76,11 +77,60 @@ int test_Individual_recombine( gsl_rng * r, int verbose )
   }
 }
 
+int test_Population_getFreqTEsPerLocus(  gsl_rng * r, int verbose )
+{
+  if( verbose > 0 ){
+    cout << __FUNCTION__<< ": ";
+    if( verbose > 1 )
+      cout << endl;
+  }
+
+  Population pop;
+  pop.setNbDiploids( 2 );
+  pop.setNbChrPerIndividual( 4 );
+  pop.setNbSitesPerChromosome( 4 );
+  pop.setExpNbTEsPerIndividual( 4 );
+  pop.setRng( r );
+  pop.initialize();
+  if( verbose > 1 )
+    pop.printChrSequencesPerInd();
+
+  vector<double> vExp;
+  vExp.push_back( 0.25 );
+  vExp.push_back( 0.25 );
+  vExp.push_back( 0.25 );
+  vExp.push_back( 0.25 );
+  vExp.push_back( 0.25 );
+  vExp.push_back( 0.5 );
+  vExp.push_back( 0.25 );
+  vExp.push_back( 0.5 );
+
+  vector<double> vObs = pop.getFreqTEsPerLocus();
+  if( verbose > 1 ){
+    cout << "vObs:";
+    for( vector<double>::iterator it=vObs.begin(); it!=vObs.end(); ++it )
+      cout << " " << *it;
+    cout << endl;
+  }
+
+  if( vExp == vObs ){
+    if( verbose > 0 )
+      cout << "TRUE" << endl;
+    return( 0 );
+  }
+  else{
+    if( verbose > 0 )
+      cout << "FALSE" << endl;
+    return( 1 );
+  }
+}
+
 int main( int argc, char* argv[] )
 {
   int nbFalses = 0;
   int seed = 1859;
   int verbose = 0;
+  int nbTests = 2;
 
   char c;
   extern char *optarg;
@@ -107,8 +157,10 @@ int main( int argc, char* argv[] )
   gsl_rng_set( r, seed );
 
   nbFalses += test_Individual_recombine( r, verbose );
+  nbFalses += test_Population_getFreqTEsPerLocus( r, verbose );
 
-  cout << "number of errors: " << nbFalses << endl;
+  cout << "errors: " << nbFalses
+       << " / " << nbTests << endl;
 
   gsl_rng_free( r );
 }
