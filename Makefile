@@ -17,6 +17,7 @@ clean:
 	@find . -name '*~' -exec rm {} \;
 	@find . -name '*.[oa]' -exec rm {} \;
 	@if test -e $(TARGET); then rm -f $(TARGET); fi
+	@if test -e test; then rm -f test; fi
 
 test: test.cpp libTEs.a
 	@if test -e $@; then rm $@; fi
