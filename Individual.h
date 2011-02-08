@@ -75,6 +75,7 @@ class Individual
   bool isViable( void );
   void printChromosomes( void );
   Chromosome& getChromosome( int );
+  int getNbTEsForLocus( int );
 };
 
 #endif
