@@ -1,0 +1,114 @@
+#include <iostream>
+#include "gsl/gsl_rng.h"
+using namespace std;
+
+#include "Individual.h"
+#include "Chromosome.h"
+
+void usage( char *program_name, int status )
+{
+  cerr << "usage: " << program_name << " [options]\n";
+  cerr << "options:" << endl;
+  cerr << "     -h: this help" << endl;
+  cerr << "     -v: verbose (default=0/1/2)" << endl;
+  exit( status );
+}
+
+int test_Individual_recombine( gsl_rng * r, int verbose )
+{
+  if( verbose > 0 ){
+    cout << __FUNCTION__<< ": ";
+    if( verbose > 1 )
+      cout << endl;
+  }
+
+  int nbSitesPerChr = 10;
+  Individual ind;
+  ind.setNbChromosomes( 2 );
+  ind.setNbSitesPerChromosome( nbSitesPerChr );
+  ind.setRng( r );
+  ind.initialize();
+
+  Chromosome chr1( nbSitesPerChr, 0.1, 0, r );
+  Chromosome chr2( nbSitesPerChr, 0, 0, r );
+  for( int i=0; i<nbSitesPerChr; ++i )
+    chr2[i] = 1;
+  if( verbose > 1 ){
+    cout << "initChr1: ";
+    chr1.printSequence();
+    cout << "initChr2: ";
+    chr2.printSequence();
+  }
+
+  Chromosome expChr1( nbSitesPerChr, 0.1, 0, r );
+  Chromosome expChr2( nbSitesPerChr, 0.1, 0, r );
+  for( int i=0; i<3; ++i )
+    expChr2[i] = 1;
+  for( int i=3; i<6; ++i )
+    expChr1[i] = 1;
+  for( int i=6; i<10; ++i )
+    expChr2[i] = 1;
+  if( verbose > 1 ){
+    cout << "expChr1: ";
+    expChr1.printSequence();
+    cout << "expChr2: ";
+    expChr2.printSequence();
+  }
+
+  ind.setVerbose( 0 );
+  ind.recombine( 1, chr1, chr2 );
+  if( verbose > 1 ){
+    cout << "obsChr1: ";
+    chr1.printSequence();
+    cout << "obsChr2: ";
+    chr2.printSequence();
+  }
+
+  if( expChr1 == chr1 && expChr2 == chr2 ){
+    if( verbose > 0 )
+      cout << "TRUE" << endl;
+    return( 0 );
+  }
+  else{
+    if( verbose > 0 )
+      cout << "FALSE" << endl;
+    return( 1 );
+  }
+}
+
+int main( int argc, char* argv[] )
+{
+  int nbFalses = 0;
+  int seed = 1859;
+  int verbose = 0;
+
+  char c;
+  extern char *optarg;
+  while( (c = getopt(argc,argv,"hv:")) != -1 ){
+    switch (c){
+    case 'h':
+      usage( argv[0], EXIT_SUCCESS );
+      break;
+    case 'v':
+      verbose = atoi(optarg);
+      break;
+    case '?':
+      usage( argv[0], EXIT_FAILURE );
+    default:
+      usage( argv[0], EXIT_FAILURE );
+    }
+  }
+
+  gsl_rng * r;
+  const gsl_rng_type * T;
+  gsl_rng_env_setup();
+  T = gsl_rng_default;
+  r = gsl_rng_alloc( T );
+  gsl_rng_set( r, seed );
+
+  nbFalses += test_Individual_recombine( r, verbose );
+
+  cout << "number of errors: " << nbFalses << endl;
+
+  gsl_rng_free( r );
+}
