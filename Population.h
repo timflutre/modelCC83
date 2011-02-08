@@ -89,8 +89,12 @@ class Population
   void transposition( float, float );
   void saveData( int, int, string );
   void getOccPerLocus( vector< vector<int> > & );
-  void getFreqBetweenLoci( void );
+  vector<double> getFreqTEsPerLocus( void );
   float getPropEmptyLoci( void );
+  float getMeanFreqTEsPerLocus( gsl_vector_view );
+  float getVarFreqTEsPerLocus( gsl_vector_view );
+  int getNbLociPerIndividual( void );
+  void printChrSequencesPerInd( void );
 };
 
 #endif
