@@ -208,9 +208,10 @@ void getElapsedTime( ostream & out,
                      time_t endRawTime )
 {
   time_t elapsedSec = difftime( endRawTime, startRawTime );
-  tm * ptm = gmtime( &elapsedSec );
+  tm * ptm;
   out << "#startTime: " << ctime( &startRawTime );
   out << "#endTime: " << ctime( &endRawTime );
+  ptm = gmtime( &elapsedSec );
   out << "#elapsed time: "
       << setw(2) << setfill('0') << ptm->tm_hour << "h "
       << setw(2) << setfill('0') << ptm->tm_min << "m "
