@@ -197,8 +197,8 @@ void writeHeaderLine( ofstream & outStream )
             << sep << "varC" << sep << "sdC"
             << sep << "minC" << sep << "q25C"
             << sep << "medC" << sep << "q75C"
-            << sep << "maxC" << sep << "empty"
-            << sep << "nL" << sep << "meanL"
+            << sep << "maxC"
+            << sep << "empty" << sep << "meanL"
             << sep << "varL" << sep << "sdL"
             << endl;
 }
