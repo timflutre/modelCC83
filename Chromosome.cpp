@@ -170,3 +170,8 @@ void Chromosome::printSequence( void )
     cout << vSeq[i];
   cout << endl;
 }
+
+bool Chromosome::isTranspElemAtSite( int site )
+{
+  return( vSeq[ site ] == 1 );
+}
