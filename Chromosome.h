@@ -56,6 +56,7 @@ class Chromosome
   void loss( void );
   void transposition( void );
   void printSequence( void );
+  bool isTranspElemAtSite( int );
 };
 
 #endif
