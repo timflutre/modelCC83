@@ -343,3 +343,8 @@ int Individual::getNbTEsForLocus( int locus )
     + vChr[ 2*chrPair + 1 ][ locus-nbSitesPerChr*chrPair ];
   return( nbTEs );
 }
+
+int Individual::getNbLoci( void )
+{
+  return( ( nbChr * nbSitesPerChr ) / 2 );
+}
