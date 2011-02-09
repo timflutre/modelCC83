@@ -77,7 +77,7 @@ int test_Individual_recombine( gsl_rng * r, int verbose )
   }
 }
 
-int test_Population_getFreqTEsPerLocus(  gsl_rng * r, int verbose )
+int test_Population_getFreqTEsPerLocus( gsl_rng * r, int verbose )
 {
   if( verbose > 0 ){
     cout << __FUNCTION__<< ": ";
@@ -125,12 +125,51 @@ int test_Population_getFreqTEsPerLocus(  gsl_rng * r, int verbose )
   }
 }
 
+int test_Individual_getOccPerLocus( gsl_rng * r, int verbose )
+{
+  if( verbose > 0 ){
+    cout << __FUNCTION__<< ": ";
+    if( verbose > 1 )
+      cout << endl;
+  }
+
+  Individual ind;
+  ind.setNbChromosomes( 4 );
+  ind.setNbSitesPerChromosome( 2 );
+  ind.setExpNbTEsPerIndividual( 4 );
+  ind.setRng( r );
+  ind.initialize();
+  if( verbose > 1 )
+    ind.printChromosomes();
+
+  int nbLoci = ind.getNbLoci();
+  vector<int> vExp;
+  vExp.push_back( 2 );
+  vExp.push_back( 0 );
+  vExp.push_back( 0 );
+  vExp.push_back( 1 );
+
+  vector<int> vObs( nbLoci, 0 );
+  ind.getOccPerLocus( vObs );
+
+  if( vExp == vObs ){
+    if( verbose > 0 )
+      cout << "TRUE" << endl;
+    return( 0 );
+  }
+  else{
+    if( verbose > 0 )
+      cout << "FALSE" << endl;
+    return( 1 );
+  }
+}
+
 int main( int argc, char* argv[] )
 {
   int nbFalses = 0;
   int seed = 1859;
   int verbose = 0;
-  int nbTests = 2;
+  int nbTests = 3;
 
   char c;
   extern char *optarg;
@@ -158,6 +197,7 @@ int main( int argc, char* argv[] )
 
   nbFalses += test_Individual_recombine( r, verbose );
   nbFalses += test_Population_getFreqTEsPerLocus( r, verbose );
+  nbFalses += test_Individual_getOccPerLocus( r, verbose );
 
   cout << "errors: " << nbFalses
        << " / " << nbTests << endl;
