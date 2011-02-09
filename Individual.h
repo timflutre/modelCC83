@@ -76,6 +76,7 @@ class Individual
   void printChromosomes( void );
   Chromosome& getChromosome( int );
   int getNbTEsForLocus( int );
+  int getNbLoci( void );
 };
 
 #endif
