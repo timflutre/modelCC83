@@ -298,9 +298,10 @@ void Individual::getOccPerLocus( vector<int> & vOccInd )
   int locus = 0;
   for( int chr=0; chr<nbChr; chr+=2 )
     for( int site=0; site<nbSitesPerChr; ++site ){
-      vOccInd[ locus ] = 1;
-      vOccInd[ locus ] = vChr[ chr ][ site ]
-        + vChr[ chr+1 ][ site ];
+      if( vChr[ chr ].isTranspElemAtSite( site ) )
+        ++ vOccInd[ locus ];
+      if( vChr[ chr+1 ].isTranspElemAtSite( site ) )
+        ++ vOccInd[ locus ];
       ++ locus;
     }
 }
