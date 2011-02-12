@@ -409,7 +409,8 @@ void Population::printChrSequencesPerInd( void )
   for( int ind=0; ind<nbDiploids; ++ind ){
     cout << "individual " << ind+1
          << " (" << nbChrPerInd << " chr, "
-         << getNbLociPerIndividual() << " loci):" << endl;
+         << getNbLociPerIndividual() << " loci, "
+         << nbSitesPerChr * nbChrPerInd << " sites):" << endl;
     vInd[ ind ].printChromosomes();
   }
 }
