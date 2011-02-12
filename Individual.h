@@ -77,6 +77,7 @@ class Individual
   Chromosome& getChromosome( int );
   int getNbTEsForLocus( int );
   int getNbLoci( void );
+  int getNbSites( void );
 };
 
 #endif
