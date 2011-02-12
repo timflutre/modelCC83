@@ -164,7 +164,6 @@ int test_Individual_getOccPerLocus( gsl_rng * r, int verbose )
   }
 }
 
-
 int test_Individual_getNbTEsForLocus( gsl_rng * r, int verbose )
 {
   if( verbose > 0 ){
@@ -176,16 +175,53 @@ int test_Individual_getNbTEsForLocus( gsl_rng * r, int verbose )
   Individual ind;
   ind.setNbChromosomes( 4 );
   ind.setNbSitesPerChromosome( 2 );
-  ind.setExpNbTEsPerIndividual( 6 );
+  ind.setExpNbTEsPerIndividual( 7 );
   ind.setRng( r );
   ind.initialize();
   if( verbose > 1 )
     ind.printChromosomes();
 
-  int locus = 0;
+  int locus = 3;
   int exp = 1;
 
   int obs = ind.getNbTEsForLocus( locus );
+  if( verbose > 1 )
+    cout << "locus=" << locus << " nbTEsExp=" << exp << " nbTEsObs=" << obs << endl;
+
+  if( exp == obs ){
+    if( verbose > 0 )
+      cout << "TRUE" << endl;
+    return( 0 );
+  }
+  else{
+    if( verbose > 0 )
+      cout << "FALSE" << endl;
+    return( 1 );
+  }
+}
+
+int test_Individual_getNbSites( gsl_rng * r, int verbose )
+{
+  if( verbose > 0 ){
+    cout << __FUNCTION__<< ": ";
+    if( verbose > 1 )
+      cout << endl;
+  }
+
+  Individual ind;
+  ind.setNbChromosomes( 4 );
+  ind.setNbSitesPerChromosome( 2 );
+  ind.setExpNbTEsPerIndividual( 4 );
+  ind.setRng( r );
+  ind.initialize();
+  if( verbose > 1 )
+    ind.printChromosomes();
+
+  int exp = 8;
+
+  int obs = ind.getNbSites();
+  if( verbose > 1 )
+    cout << "nbSitesExp=" << exp << " nbSitesObs=" << obs << endl;
 
   if( exp == obs ){
     if( verbose > 0 )
@@ -204,7 +240,7 @@ int main( int argc, char* argv[] )
   int nbFalses = 0;
   int seed = 1859;
   int verbose = 0;
-  int nbTests = 4;
+  int nbTests = 5;
 
   char c;
   extern char *optarg;
@@ -234,6 +270,7 @@ int main( int argc, char* argv[] )
   nbFalses += test_Population_getFreqTEsPerLocus( r, verbose );
   nbFalses += test_Individual_getOccPerLocus( r, verbose );
   nbFalses += test_Individual_getNbTEsForLocus( r, verbose );
+  nbFalses += test_Individual_getNbSites( r, verbose );
 
   cout << "errors: " << nbFalses
        << " / " << nbTests << endl;
