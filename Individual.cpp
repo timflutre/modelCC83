@@ -296,7 +296,7 @@ int Individual::transposition( float probTransp0, float k )
 void Individual::getOccPerLocus( vector<int> & vOccInd )
 {
   int locus = 0;
-  for( int chr=0; chr<nbChr; chr+=2 )
+  for( int chr=0; chr<nbChr; chr+=2 )  // "+=2" -> diploids
     for( int site=0; site<nbSitesPerChr; ++site ){
       if( vChr[ chr ].isTranspElemAtSite( site ) )
         ++ vOccInd[ locus ];
@@ -340,12 +340,30 @@ int Individual::getNbTEsForLocus( int locus )
 {
   int nbTEs = 0;
   int chrPair = floor( (float) locus / nbSitesPerChr );
-  nbTEs = vChr[ 2*chrPair ][ locus-nbSitesPerChr*chrPair ]
-    + vChr[ 2*chrPair + 1 ][ locus-nbSitesPerChr*chrPair ];
+  if( vChr[ 2*chrPair ].isTranspElemAtSite( locus-nbSitesPerChr*chrPair ) )
+    ++ nbTEs;
+  if( vChr[ 2*chrPair + 1 ].isTranspElemAtSite( locus-nbSitesPerChr*chrPair ) )
+    ++ nbTEs;
   return( nbTEs );
 }
 
 int Individual::getNbLoci( void )
 {
-  return( ( nbChr * nbSitesPerChr ) / 2 );
+  if( vChr.size() == 0 )
+    return( 0 );
+  else if( vChr[0].getNbSites() == 0 )
+    return( 0 );
+  return( ( vChr.size() * vChr[0].getNbSites() ) / 2 );  // "/2" -> diploids
+}
+
+int Individual::getNbSites( void )
+{
+  if( vChr.size() == 0 )
+    return( 0 );
+  else if( vChr[0].getNbSites() == 0 )
+    return( 0 );
+  int nbSites = 0;
+  for( int chr=0; chr<nbChr; ++chr )
+    nbSites += vChr[ chr ].getNbSites();
+  return( nbSites );
 }
