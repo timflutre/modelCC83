@@ -1,14 +1,17 @@
-# compilation (on my machine, add -g to debug with gdb)
+License GPL v3
+Copyright 2011 Timothee Flutre
+
+# compilation (add -g to debug with gdb)
 make
 
 # check for memory leaks
-valgrind ./a.out -v 1 -s 3 toto
+valgrind ./modelCC83 -v 1 -s 3 toto
 
 # computation times
-$ ./a.out -s 10 -g 1000 -o data_n10.csv
+$ ./modelCC83 -s 10 -g 1000 -o data_n10.csv
 START: Wed Feb  2 15:05:10 2011
 END: Wed Feb  2 15:06:06 2011
-$ ./a.out -s 10 -n 50 -g 1000 -o data_n50.csv
+$ ./modelCC83 -s 10 -n 50 -g 1000 -o data_n50.csv
 START: Wed Feb  2 16:07:48 2011
 END: Wed Feb  2 16:13:24 2011
 
