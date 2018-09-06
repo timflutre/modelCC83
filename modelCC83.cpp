@@ -4,7 +4,7 @@
 
 // Purpose: simulate transposable elements dynamics in genomes with the 
 // model of Charlesworth & Charlesworth (1983).
-// Copyright (C) <2011>  <Timothée Flutre>
+// Copyright (C) <2011,2018>  <Timothée Flutre>
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
