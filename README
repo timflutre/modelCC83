@@ -1,6 +1,5 @@
 This C++ package implements the simulation of transposable element dynamics
-published by Charlesworth & Charlesworth (1983):
-http://link.springer.com/10.1007/s00122-009-1203-2
+published by Charlesworth & Charlesworth (1983).
 
 License GPL v3
 Copyright 2011,2018 Timothee Flutre
