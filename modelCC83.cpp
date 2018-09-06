@@ -23,6 +23,7 @@
 #include <cstdio>  // for EOF
 #include <sys/stat.h>  // for struct stat
 #include <ctime>
+#include <getopt.h>
 #include "gsl/gsl_rng.h"
 using namespace std;
 
